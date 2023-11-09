@@ -4,18 +4,20 @@ import torch
 from sklearn import model_selection
 import constants
 import spec_utils
+from sklearn.preprocessing import MinMaxScaler
+import numpy as np
 
 
 class DSManager:
-    def __init__(self, folds=10, X_columns=None, y_column = "oc"):
+    def __init__(self, folds=10, X_columns=None, y_column="oc"):
         cols_to_remove = ["id", "lc1", "lu1"]
         cols_cat = ["lc1", "lu1"]
-        cols_props = ["phh","phc","ec","caco3","p","n","k","elevation","stones","oc"]
+        cols_props = ["phh", "phc", "ec", "caco3", "p", "n", "k", "elevation", "stones", "oc"]
         cols_wavelengths = spec_utils.get_wavelengths()
 
         torch.manual_seed(0)
         df = pd.read_csv(constants.DATASET)
-        if X_columns is None or len(X_columns)==0:
+        if X_columns is None or len(X_columns) == 0:
             all_columns = list(df.columns)
             for c in cols_to_remove:
                 all_columns.remove(c)
@@ -43,20 +45,28 @@ class DSManager:
 
         df2[self.y_column] = df[self.y_column]
         self.full_data = df2.to_numpy()
+        self.full_data = DSManager._normalize(self.full_data)
+
+    @staticmethod
+    def _normalize(data):
+        for i in range(data.shape[1]):
+            scaler = MinMaxScaler()
+            x_scaled = scaler.fit_transform(data[:, i].reshape(-1, 1))
+            data[:, i] = np.squeeze(x_scaled)
+        return data
 
     def derive(self, df, si):
         if si == "savi":
             L = 0.5
             nir = df["vnir4"]
             red = df["red"]
-            return (nir - red)/(nir + red + L)*(1+L)
+            return (nir - red) / (nir + red + L) * (1 + L)
         elif si == "savi2":
             L = 35
             nir = df["vnir4"]
             red = df["red"]
-            return (nir - red)/(nir + red + L)*(1+L)
+            return (nir - red) / (nir + red + L) * (1 + L)
         return None
-
 
     def get_k_folds(self):
         kf = KFold(n_splits=self.folds)
@@ -83,10 +93,10 @@ class DSManager:
     def split_X_y_array(data):
         x = data[:, :-1]
         y = data[:, -1]
-        return x,y
+        return x, y
 
     def get_input_size(self):
-        x,y = self.split_X_y()
+        x, y = self.split_X_y()
         return x.shape[1]
 
     def get_train_test(self):
