@@ -7,15 +7,21 @@ signal = df.iloc[0].to_numpy()
 start_index = list(df.columns).index("0")
 signal = signal[start_index:]
 
-# print(signal)
-# print(signal.shape)
+print("signal")
+print(signal)
+print(signal.shape)
 
 
-indices = np.arange(len(signal))
+indices = np.linspace(0, 1, 66)
 cubic_spline = CubicSpline(indices, signal)
-fine_x = np.linspace(0, len(signal) - 1, 100)
-#print(fine_x)
-y_interp = cubic_spline([32.000001])
+
+
+y_interp = cubic_spline([0])
 print(y_interp)
-# print(y_interp.shape)
+y_interp = cubic_spline([0.5])
+print(y_interp)
+y_interp = cubic_spline([1])
+print(y_interp)
+
+
 

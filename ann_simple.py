@@ -11,7 +11,7 @@ class ANNSimple(nn.Module):
         self.input_size = input_size
         self.X_columns = X_columns
         self.y_column = y_column
-        self.criterion_soc = torch.nn.MSELoss(reduction='mean')
+        self.criterion_soc = torch.nn.MSELoss(reduction='sum')
         self.linear1 = nn.Sequential(
             nn.Linear(input_size, 10),
             nn.LeakyReLU(),
