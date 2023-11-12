@@ -13,7 +13,7 @@ class ANNSimple(nn.Module):
         self.y_column = y_column
         self.criterion_soc = torch.nn.MSELoss(reduction='sum')
         self.linear1 = nn.Sequential(
-            nn.Linear(input_size, 10),
+            nn.Linear(1, 10),
             nn.LeakyReLU(),
             nn.Linear(10, 1)
         )
@@ -22,14 +22,14 @@ class ANNSimple(nn.Module):
         self.j = nn.Parameter(torch.tensor(0.9))
 
     def forward(self, x, soc):
-        indices = torch.linspace(0, 1, 66)
-        cubic_splines = [CubicSpline(indices, x[index]) for index in range(x.shape[0])]
-        r_i = torch.zeros(x.shape[0], dtype=torch.float32)
-        r_j = torch.zeros(x.shape[0], dtype=torch.float32)
+        indices = torch.linspace(0, 1, 66).to(self.device)
+        cubic_splines = [CubicSpline(indices.cpu().numpy(), x[index].cpu().numpy()) for index in range(x.shape[0])]
+        r_i = torch.zeros(x.shape[0], dtype=torch.float32).to(self.device)
+        r_j = torch.zeros(x.shape[0], dtype=torch.float32).to(self.device)
         for index in range(x.shape[0]):
             cs = cubic_splines[index]
-            r_i[index] = cs([self.i.item()])
-            r_j[index] = cs([self.j.item()])
+            r_i[index] = cs([self.i.cpu().item()])[0]
+            r_j[index] = cs([self.j.cpu().item()])[0]
         ndis = self.ndi(r_i, r_j)
         soc_hat = self.linear1(ndis)
         soc_hat = soc_hat.reshape(-1)
@@ -43,4 +43,5 @@ class ANNSimple(nn.Module):
         return F.relu(param - 1)
 
     def ndi(self, r_i, r_j):
-        return (r_i - r_j) / (r_i + r_j)
+        ndis = (r_i - r_j) / (r_i + r_j)
+        return ndis.reshape(-1,1)

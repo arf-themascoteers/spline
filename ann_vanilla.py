@@ -40,10 +40,11 @@ class ANNVanilla:
                 optimizer.zero_grad()
                 batch_number += 1
                 print(f'Epoch:{epoch + 1} (of {self.epochs}), Batch: {batch_number} of {n_batches}, Loss:{loss.item():.6f}')
-
+            print(self.model.i)
+            print(self.model.j)
         #torch.save(self.model, "ann.pt")]
-        if hasattr(self.model, "L"):
-            print(self.model.L)
+
+
 
 
     def test(self):
