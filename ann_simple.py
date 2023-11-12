@@ -1,7 +1,7 @@
 import torch.nn as nn
 import torch
 import torch.nn.functional as F
-from scipy.interpolate import CubicSpline
+from torchcubicspline import(natural_cubic_spline_coeffs, NaturalCubicSpline)
 
 
 class ANNSimple(nn.Module):
@@ -20,17 +20,15 @@ class ANNSimple(nn.Module):
 
         self.i = nn.Parameter(torch.tensor(0.1))
         self.j = nn.Parameter(torch.tensor(0.9))
+        self.indices = torch.linspace(0, 1, 66).to(device)
 
     def forward(self, x, soc):
-        indices = torch.linspace(0, 1, 66).to(self.device)
-        cubic_splines = [CubicSpline(indices.cpu().numpy(), x[index].cpu().numpy()) for index in range(x.shape[0])]
-        r_i = torch.zeros(x.shape[0], dtype=torch.float32).to(self.device)
-        r_j = torch.zeros(x.shape[0], dtype=torch.float32).to(self.device)
-        for index in range(x.shape[0]):
-            cs = cubic_splines[index]
-            r_i[index] = cs([self.i.cpu().item()])[0]
-            r_j[index] = cs([self.j.cpu().item()])[0]
-        ndis = self.ndi(r_i, r_j)
+        x = x.permute(1,0)
+        coeffs = natural_cubic_spline_coeffs(self.indices, x)
+        spline = NaturalCubicSpline(coeffs)
+        r_is = spline.evaluate(self.i)
+        r_js = spline.evaluate(self.j)
+        ndis = self.ndi(r_is, r_js)
         soc_hat = self.linear1(ndis)
         soc_hat = soc_hat.reshape(-1)
         loss = self.criterion_soc(soc_hat, soc)
