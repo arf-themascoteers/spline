@@ -44,9 +44,8 @@ class ANNVanilla:
                 optimizer.zero_grad()
                 batch_number += 1
                 #print(f'Epoch:{epoch + 1} (of {self.epochs}), Batch: {batch_number} of {n_batches}, Loss:{loss.item():.6f}')
-
-            print(round(self.model.i.item(),5),round(self.model.j.item(),5))
-            print()
+            r2, rmse = self.validate()
+            print(round(self.model.i.item(),5),round(self.model.j.item(),5), round(r2,5), round(rmse,5))
         #torch.save(self.model, "ann.pt")]
 
     def test(self):

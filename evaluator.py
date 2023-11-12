@@ -42,7 +42,7 @@ class Evaluator:
                 print(f"{repeat_number}-{fold_number} done already")
                 continue
             else:
-                r2, rmse = AlgorithmRunner.calculate_score(train_x, train_y,
+                r2, rmse, i, j = AlgorithmRunner.calculate_score(train_x, train_y,
                                                            test_x, test_y,
                                                            validation_x, validation_y,
                                                            algorithm,
