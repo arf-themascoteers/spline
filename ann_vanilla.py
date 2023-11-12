@@ -23,7 +23,7 @@ class ANNVanilla:
         self.train_dataset = SpectralDataset(train_x, train_y)
         self.test_dataset = SpectralDataset(test_x, test_y)
         self.validation_dataset = SpectralDataset(validation_x, validation_y)
-        self.epochs = 400
+        self.epochs = 3
         self.batch_size = 1000
 
     def train(self):

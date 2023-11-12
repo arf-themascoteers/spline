@@ -119,12 +119,7 @@ class Reporter:
         return self.details[details_row,details_column_r2], self.details[details_row,details_column_rmse]
 
     def get_details_columns(self):
-        cols = []
-        for metric in self.metrics:
-            for repeat in range(1,self.repeat+1):
-                for fold in range(1,self.folds+1):
-                    cols.append(f"{metric}({repeat}-{fold})")
-        return cols
+        return self.metrics
 
     def get_summary_columns(self):
         cols = []

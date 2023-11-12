@@ -1,10 +1,8 @@
 from evaluator import Evaluator
 import spec_utils
+from clear import clear_all
 
 if __name__ == "__main__":
-    column_groups = [
-        spec_utils.get_wavelengths()
-    ]
-    algorithms = ["ann_simple"]
-    c = Evaluator(prefix="test", folds=10, algorithms=algorithms, column_groups=column_groups)
+    clear_all()
+    c = Evaluator(prefix="test", folds=10, algorithm="ann_simple", column_group=spec_utils.get_wavelengths())
     c.process()
