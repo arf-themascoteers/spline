@@ -5,8 +5,8 @@ import spec_utils
 
 
 class Reporter:
-    def __init__(self, prefix, column_groups, algorithms, repeat, folds):
-        self.prefix = prefix
+    def __init__(self, file_name, column_groups, algorithms, repeat, folds):
+        self.file_name = file_name
         self.column_groups = column_groups
         self.algorithms = algorithms
         self.repeat = repeat
@@ -14,7 +14,7 @@ class Reporter:
         self.metrics = ["R2", "RMSE", "i", "j"]
         self.details_columns = self.get_details_columns()
         self.details_text_columns = ["repeat", "fold"]
-        self.details_file = f"results/{prefix}_details.csv"
+        self.details_file = f"results/{file_name}"
         self.details = np.zeros((self.get_count_iterations(), len(self.metrics)))
         self.sync_details_file()
 
@@ -63,8 +63,7 @@ class Reporter:
         details_column_rmse = self.get_details_column("RMSE")
         details_column_i = self.get_details_column("i")
         details_column_j = self.get_details_column("j")
-        return (self.details[details_row,details_column_r2], self.details[details_row,details_column_rmse],
-                self.details[details_column_i, self.details[details_column_j]])
+        return self.details[details_row,details_column_r2], self.details[details_row,details_column_rmse], self.details[details_column_i], self.details[details_column_j]
 
     def get_details_columns(self):
         return self.metrics
