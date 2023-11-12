@@ -1,3 +1,5 @@
+import math
+from sklearn.metrics import mean_squared_error, r2_score
 from spectral_dataset import SpectralDataset
 import torch
 from torch.utils.data import DataLoader
@@ -42,12 +44,10 @@ class ANNVanilla:
                 optimizer.zero_grad()
                 batch_number += 1
                 #print(f'Epoch:{epoch + 1} (of {self.epochs}), Batch: {batch_number} of {n_batches}, Loss:{loss.item():.6f}')
-            print(self.model.i)
-            print(self.model.j)
+
+            print(round(self.model.i.item(),5),round(self.model.j.item(),5))
+            print()
         #torch.save(self.model, "ann.pt")]
-
-
-
 
     def test(self):
         batch_size = 30000
@@ -61,6 +61,23 @@ class ANNVanilla:
             y_hat = y_hat.reshape(-1)
             y_hat = y_hat.detach().cpu().numpy()
             return y_hat
+
+    def validate(self):
+        batch_size = 30000
+        dataloader = DataLoader(self.validation_dataset, batch_size=batch_size, shuffle=False)
+        self.model.eval()
+
+        for (x, y) in dataloader:
+            x = x.to(self.device)
+            y = y.to(self.device)
+            y_hat, additional, loss = self.model(x, y)
+            y_hat = y_hat.reshape(-1)
+            y_hat = y_hat.detach().cpu().numpy()
+
+            r2 = r2_score(y, y_hat)
+            rmse = math.sqrt(mean_squared_error(y, y_hat, squared=False))
+
+            return max(r2,0), rmse
 
     def get_model(self):
         return self.ann_model

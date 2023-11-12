@@ -26,4 +26,4 @@ class AlgorithmRunner:
         r2 = r2_score(test_y, y_hats)
         rmse = math.sqrt(mean_squared_error(test_y, y_hats, squared=False))
         i,j = ann.get_model().get_params()
-        return max(r2,0), rmse
+        return max(r2,0), rmse, i, j
