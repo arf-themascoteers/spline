@@ -2,6 +2,8 @@ from spectral_dataset import SpectralDataset
 import torch
 from torch.utils.data import DataLoader
 import ann_utils
+from torchcubicspline import(natural_cubic_spline_coeffs,
+                             NaturalCubicSpline)
 
 
 class ANNVanilla:

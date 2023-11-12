@@ -1,27 +1,25 @@
-from scipy.interpolate import CubicSpline
+import torch
 import pandas as pd
-import numpy as np
+from torchcubicspline import(natural_cubic_spline_coeffs,
+                             NaturalCubicSpline)
 
 df = pd.read_csv("data/dataset_66.csv")
-signal = df.iloc[0].to_numpy()
 start_index = list(df.columns).index("0")
-signal = signal[start_index:]
-
+signal = df.iloc[0:3,start_index:]
+signal = signal.to_numpy()
+signal = torch.tensor(signal,dtype=torch.float32)
+signal = signal.permute(1,0)
 print("signal")
-print(signal)
-print(signal.shape)
+print(signal[0,:])
+print(signal[32,:])
+print(signal[65,:])
 
 
-indices = np.linspace(0, 1, 66)
-cubic_spline = CubicSpline(indices, signal)
-
-
-y_interp = cubic_spline([0])
-print(y_interp)
-y_interp = cubic_spline([0.5])
-print(y_interp)
-y_interp = cubic_spline([1])
-print(y_interp)
-
+indices = torch.linspace(0, 1, 66)
+coeffs  = natural_cubic_spline_coeffs(indices, signal)
+spline = NaturalCubicSpline(coeffs)
+point = torch.tensor([0,0.492307,1])
+out = spline.evaluate(point)
+print(out)
 
 
