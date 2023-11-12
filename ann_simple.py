@@ -23,7 +23,7 @@ class ANNSimple(nn.Module):
 
     def forward(self, x, soc):
         indices = torch.linspace(0, 1, 66)
-        cubic_splines = [CubicSpline(indices, x[index]) for index in x.shape[0]]
+        cubic_splines = [CubicSpline(indices, x[index]) for index in range(x.shape[0])]
         r_i = torch.zeros(x.shape[0], dtype=torch.float32)
         r_j = torch.zeros(x.shape[0], dtype=torch.float32)
         for index in range(x.shape[0]):
