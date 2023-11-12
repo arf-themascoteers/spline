@@ -52,7 +52,7 @@ class Evaluator:
             if self.verbose:
                 print(f"{r2} - {rmse}")
                 print(f"R2 - RMSE")
-            self.reporter.set_details(index_algorithm, repeat_number, fold_number, index_column_group, r2, rmse)
+            self.reporter.set_details(index_algorithm, repeat_number, fold_number, index_column_group, r2, rmse, i, j)
             self.reporter.write_details()
             self.reporter.update_summary()
 

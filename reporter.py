@@ -11,12 +11,12 @@ class Reporter:
         self.algorithms = algorithms
         self.repeat = repeat
         self.folds = folds
+        self.metrics = ["R2", "RMSE", "i", "j"]
         self.details_columns = self.get_details_columns()
         self.summary_columns = self.get_summary_columns()
         self.details_text_columns = ["algorithm", "column_group"]
         self.summary_file = f"results/{prefix}_summary.csv"
         self.details_file = f"results/{prefix}_details.csv"
-        self.metrics = ["R2", "RMSE", "i", "j"]
         self.details = np.zeros((len(self.algorithms) * len(self.column_groups), self.repeat * self.folds * len(self.metrics)))
         self.sync_details_file()
 
@@ -114,8 +114,8 @@ class Reporter:
 
     def get_details(self, index_algorithm, repeat_number, fold_number, index_column_group):
         details_row = self.get_details_row(index_algorithm, index_column_group)
-        details_column_r2 = self.get_details_column(repeat_number, fold_number, 0)
-        details_column_rmse = self.get_details_column(repeat_number, fold_number, 1)
+        details_column_r2 = self.get_details_column(repeat_number, fold_number, "R2")
+        details_column_rmse = self.get_details_column(repeat_number, fold_number, "RMSE")
         return self.details[details_row,details_column_r2], self.details[details_row,details_column_rmse]
 
     def get_details_columns(self):

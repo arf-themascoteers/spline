@@ -23,7 +23,7 @@ class ANNVanilla:
         self.train_dataset = SpectralDataset(train_x, train_y)
         self.test_dataset = SpectralDataset(test_x, test_y)
         self.validation_dataset = SpectralDataset(validation_x, validation_y)
-        self.epochs = 400
+        self.epochs = 3
         self.batch_size = 1000
 
     def train(self):
@@ -45,7 +45,11 @@ class ANNVanilla:
                 batch_number += 1
                 #print(f'Epoch:{epoch + 1} (of {self.epochs}), Batch: {batch_number} of {n_batches}, Loss:{loss.item():.6f}')
             r2, rmse = self.validate()
-            print(round(self.model.i.item(),5),round(self.model.j.item(),5), round(r2,5), round(rmse,5))
+            r2 = round(r2,5)
+            rmse = round(rmse,5)
+            i = round(self.model.i.item() * 4200)
+            j = round(self.model.j.item() * 4200)
+            print(r2,rmse,i,j)
         #torch.save(self.model, "ann.pt")]
 
     def test(self):
@@ -72,7 +76,7 @@ class ANNVanilla:
             y_hat, additional, loss = self.model(x, y)
             y_hat = y_hat.reshape(-1)
             y_hat = y_hat.detach().cpu().numpy()
-
+            y = y.detach().cpu().numpy()
             r2 = r2_score(y, y_hat)
             rmse = math.sqrt(mean_squared_error(y, y_hat, squared=False))
 
