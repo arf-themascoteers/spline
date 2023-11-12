@@ -1,43 +1,33 @@
 from reporter import Reporter
 from algorithm_runner import AlgorithmRunner
 from ds_manager import DSManager
+import spec_utils
 
 
 class Evaluator:
-    def __init__(self, prefix="", verbose=False, repeat=1, folds=10, algorithms=None, column_groups=None):
+    def __init__(self, prefix="", verbose=False, repeat=1, folds=10, algorithm=None, column_group=None):
         self.repeat = repeat
         self.folds = folds
         self.verbose = verbose
-        self.algorithms = algorithms
-        self.column_groups = column_groups
+        self.algorithm = algorithm
+        self.column_group = column_group
 
-        if self.column_groups is None:
-            self.column_groups = [[]]
+        if self.column_group is None:
+            self.column_group = spec_utils.get_wavelengths()
 
-        if self.algorithms is None:
-            self.algorithms = ["mlr", "rf", "svr", "ann_simple", "ann_1dcnn1"]
+        if self.algorithm is None:
+            self.algorithm = "ann_simple"
 
-        self.reporter = Reporter(prefix, self.column_groups, self.algorithms, self.repeat, self.folds)
+        self.reporter = Reporter(prefix, self.column_group, self.algorithm, self.repeat, self.folds)
 
     def process(self):
         for repeat_number in range(self.repeat):
             self.process_repeat(repeat_number)
 
     def process_repeat(self, repeat_number):
-        for index_algorithm, algorithm in enumerate(self.algorithms):
-            self.process_algorithm(repeat_number, index_algorithm)
-
-    def process_algorithm(self, repeat_number, index_algorithm):
-        for index_column_group in range(len(self.column_groups)):
-            config = self.column_groups[index_column_group]
-            print("Start", f"{repeat_number}:{self.algorithms[index_algorithm]} - {Reporter.column_group_display(config)}")
-            self.process_coolumn_group(repeat_number, index_algorithm, index_column_group)
-
-    def process_coolumn_group(self, repeat_number, index_algorithm, index_column_group):
-        algorithm = self.algorithms[index_algorithm]
-        ds = DSManager(folds=self.folds, X_columns=self.column_groups[index_column_group])
+        ds = DSManager(folds=self.folds, X_columns=self.column_group)
         for fold_number, (train_x, train_y, test_x, test_y, validation_x, validation_y) in enumerate(ds.get_k_folds()):
-            r2, rmse = self.reporter.get_details(index_algorithm, repeat_number, fold_number, index_column_group)
+            r2, rmse,i,j = self.reporter.get_details(repeat_number, fold_number)
             if r2 != 0:
                 print(f"{repeat_number}-{fold_number} done already")
                 continue
@@ -45,14 +35,12 @@ class Evaluator:
                 r2, rmse, i, j = AlgorithmRunner.calculate_score(train_x, train_y,
                                                            test_x, test_y,
                                                            validation_x, validation_y,
-                                                           algorithm,
+                                                           self.algorithm,
                                                            ds.X_columns,
                                                            ds.y_column,
                                                            )
             if self.verbose:
-                print(f"{r2} - {rmse}")
-                print(f"R2 - RMSE")
-            self.reporter.set_details(index_algorithm, repeat_number, fold_number, index_column_group, r2, rmse, i, j)
+                print(f"{r2} - {rmse} - {i} - {j}")
+            self.reporter.set_details(repeat_number, fold_number, r2, rmse, i, j)
             self.reporter.write_details()
-            self.reporter.update_summary()
 

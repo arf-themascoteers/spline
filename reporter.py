@@ -13,13 +13,10 @@ class Reporter:
         self.folds = folds
         self.metrics = ["R2", "RMSE", "i", "j"]
         self.details_columns = self.get_details_columns()
-        self.summary_columns = self.get_summary_columns()
-        self.details_text_columns = ["algorithm", "column_group"]
-        self.summary_file = f"results/{prefix}_summary.csv"
+        self.details_text_columns = ["repeat", "fold"]
         self.details_file = f"results/{prefix}_details.csv"
-        self.details = np.zeros((len(self.algorithms) * len(self.column_groups), self.repeat * self.folds * len(self.metrics)))
+        self.details = np.zeros((self.get_count_iterations(), len(self.metrics)))
         self.sync_details_file()
-
 
     def sync_details_file(self):
         if not os.path.exists(self.details_file):
@@ -28,114 +25,53 @@ class Reporter:
         df.drop(columns=self.details_text_columns, axis=1, inplace=True)
         self.details = df.to_numpy()
 
-    @staticmethod
-    def column_group_display(column_group):
-        sorted_colgroup = sorted(column_group)
-        if sorted(spec_utils.get_rgb()) == sorted_colgroup:
-            return "rgb"
-        if sorted(spec_utils.get_wavelengths()) == sorted_colgroup:
-            return "bands"
-        if len(column_group) == 0:
-            return "all"
-        name = "-".join(column_group[0:3])
-        if len(column_group) > 3:
-            name = f"{name}+{len(column_group)-3}"
-        return name
+    def fold_display(self):
+        folds = []
+        for r in range(self.repeat):
+            folds = folds + [f"{f}" for f in range(self.folds)]
+        return folds
 
-    @staticmethod
-    def column_groups_display(column_groups):
-        return [Reporter.column_group_display(cg) for cg in column_groups]
-
-    def write_summary(self, summary):
-        summary_copy = np.round(summary,3)
-        df = pd.DataFrame(data=summary_copy, columns=self.summary_columns)
-        df.insert(0, "column_group", pd.Series(Reporter.column_groups_display(self.column_groups)))
-        df.to_csv(self.summary_file, index=False)
-
-    def find_mean_of_done_iterations(self, detail_cells):
-        detail_cells = detail_cells[detail_cells != 0]
-        if len(detail_cells) == 0:
-            return 0
-        else:
-            return np.mean(detail_cells)
+    def repeat_display(self):
+        repeats = []
+        for r in range(self.repeat):
+            repeats = repeats + [f"{r}" for f in range(self.folds)]
+        return repeats
 
     def get_count_iterations(self):
-        return self.folds*self.folds
+        return self.repeat*self.folds
 
-    def get_metric_start_index(self,metric):
-        metric_index = self.metrics.index(metric)
-        return self.get_count_iterations()*metric_index
+    def get_details_row(self, repeat_number, fold_number):
+        return repeat_number*self.folds + fold_number
 
-    def get_metric_end_index(self,metric):
-        self.get_metric_start_index(metric) + self.get_count_iterations()
+    def get_details_column(self, metric):
+        return self.metrics.index(metric)
 
-    def update_summary(self):
-        score_mean = np.zeros((len(self.column_groups), 2 * len(self.algorithms)))
-        r2_start = self.get_metric_start_index("R2")
-        r2_end = self.get_metric_end_index("R2")
-        rmse_start = self.get_metric_start_index("RMSE")
-        rmse_end = self.get_metric_end_index("RMSE")
-
-        for index_column_group in range(len(self.column_groups)):
-            for index_algorithm in range(len(self.algorithms)):
-                details_row = self.get_details_row(index_algorithm, index_column_group)
-                detail_r2_cells = self.details[details_row, r2_start:r2_end]
-                r2_column_index = index_algorithm
-                score_mean[index_column_group, r2_column_index] = self.find_mean_of_done_iterations(detail_r2_cells)
-                detail_rmse_cells = self.details[details_row, rmse_start:rmse_end]
-                rmse_column_index = len(self.algorithms) + index_algorithm
-                score_mean[index_column_group, rmse_column_index] = self.find_mean_of_done_iterations(detail_rmse_cells)
-        self.write_summary(score_mean)
-
-    def get_details_alg_column_group(self):
-        details_alg_column_group = []
-        for i in self.algorithms:
-            for j in self.column_groups:
-                details_alg_column_group.append((i,j))
-        return details_alg_column_group
-
-    def get_details_row(self, index_algorithm, index_column_group):
-        return index_algorithm*len(self.column_groups) + index_column_group
-
-    def get_details_column(self, repeat_number, fold_number, metric):
-        metric_index = self.metrics.index(metric)
-        return (metric_index * self.repeat * self.folds ) + (repeat_number*self.folds + fold_number)
-
-    def set_details(self, index_algorithm, repeat_number, fold_number, index_column_group, r2, rmse, i, j):
-        details_row = self.get_details_row(index_algorithm, index_column_group)
-        details_column_r2 = self.get_details_column(repeat_number, fold_number, "R2")
-        details_column_rmse = self.get_details_column(repeat_number, fold_number, "RMSE")
-        details_column_i = self.get_details_column(repeat_number, fold_number, "i")
-        details_column_j = self.get_details_column(repeat_number, fold_number, "j")
+    def set_details(self, repeat_number, fold_number, r2, rmse, i, j):
+        details_row = self.get_details_row(repeat_number, fold_number)
+        details_column_r2 = self.get_details_column("R2")
+        details_column_rmse = self.get_details_column("RMSE")
+        details_column_i = self.get_details_column("i")
+        details_column_j = self.get_details_column("j")
         self.details[details_row, details_column_r2] = r2
         self.details[details_row, details_column_rmse] = rmse
         self.details[details_row, details_column_i] = i
         self.details[details_row, details_column_j] = j
 
-    def get_details(self, index_algorithm, repeat_number, fold_number, index_column_group):
-        details_row = self.get_details_row(index_algorithm, index_column_group)
-        details_column_r2 = self.get_details_column(repeat_number, fold_number, "R2")
-        details_column_rmse = self.get_details_column(repeat_number, fold_number, "RMSE")
-        return self.details[details_row,details_column_r2], self.details[details_row,details_column_rmse]
+    def get_details(self, repeat_number, fold_number):
+        details_row = self.get_details_row(repeat_number, fold_number)
+        details_column_r2 = self.get_details_column("R2")
+        details_column_rmse = self.get_details_column("RMSE")
+        details_column_i = self.get_details_column("i")
+        details_column_j = self.get_details_column("j")
+        return (self.details[details_row,details_column_r2], self.details[details_row,details_column_rmse],
+                self.details[details_column_i, self.details[details_column_j]])
 
     def get_details_columns(self):
         return self.metrics
 
-    def get_summary_columns(self):
-        cols = []
-        for metric in ["R2", "RMSE"]:
-            for algorithm in self.algorithms:
-                cols.append(f"{metric}({algorithm})")
-        return cols
-
     def write_details(self):
         details_copy = np.round(self.details, 3)
         df = pd.DataFrame(data=details_copy, columns=self.details_columns)
-        details_alg_conf = self.get_details_alg_column_group()
-        algs = [i[0] for i in details_alg_conf]
-        col_groups = [i[1] for i in details_alg_conf]
-
-        df.insert(0,"column_group",pd.Series(Reporter.column_groups_display(col_groups)))
-        df.insert(0,"algorithm",pd.Series(algs))
-
+        df.insert(0,"fold", pd.Series(self.fold_display()))
+        df.insert(0,"repeat",pd.Series(self.repeat_display()))
         df.to_csv(self.details_file, index=False)
