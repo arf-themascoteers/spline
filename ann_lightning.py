@@ -52,3 +52,6 @@ class ANNLightning:
         algorithm.eval()
         y_pred = algorithm(self.test_dataset.x)
         return y_pred.detach().numpy()
+
+    def get_model(self):
+        return self.ann_model

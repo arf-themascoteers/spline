@@ -43,3 +43,6 @@ class ANNSimple(nn.Module):
     def ndi(self, r_i, r_j):
         ndis = (r_i - r_j) / (r_i + r_j)
         return ndis.reshape(-1,1)
+
+    def get_params(self):
+        return round(self.i.item()*4200), round(self.j.item()*4200)
