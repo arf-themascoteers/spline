@@ -14,7 +14,7 @@ class Reporter:
         self.metrics = ["R2", "RMSE", "i", "j"]
         self.details_columns = self.get_details_columns()
         self.details_text_columns = ["repeat", "fold"]
-        self.details_file = f"results/{file_name}"
+        self.details_file = f"results/{file_name}.csv"
         self.details = np.zeros((self.get_count_iterations(), len(self.metrics)))
         self.sync_details_file()
 
