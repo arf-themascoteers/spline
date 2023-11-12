@@ -19,10 +19,10 @@ class ANNSimple(nn.Module):
         )
 
         self.i = nn.Parameter(torch.tensor(0.1))
-        self.j = nn.Parameter(torch.tensor(0.5))
+        self.j = nn.Parameter(torch.tensor(0.9))
 
     def forward(self, x, soc):
-        indices = torch.arange(x.shape[1])
+        indices = torch.linspace(0, 1, 66)
         cubic_splines = [CubicSpline(indices, x[index]) for index in x.shape[0]]
         r_i = torch.zeros(x.shape[0], dtype=torch.float32)
         r_j = torch.zeros(x.shape[0], dtype=torch.float32)
@@ -40,7 +40,7 @@ class ANNSimple(nn.Module):
         return F.relu(-1*param)
 
     def upper_bound_loss(self, param):
-        return F.relu(param - 0.65)
+        return F.relu(param - 1)
 
     def ndi(self, r_i, r_j):
         return (r_i - r_j) / (r_i + r_j)

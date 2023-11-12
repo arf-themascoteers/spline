@@ -10,41 +10,17 @@ import numpy as np
 
 class DSManager:
     def __init__(self, folds=10, X_columns=None, y_column="oc"):
-        cols_to_remove = ["id", "lc1", "lu1"]
-        cols_cat = ["lc1", "lu1"]
-        cols_props = ["phh", "phc", "ec", "caco3", "p", "n", "k", "elevation", "stones", "oc"]
-        cols_wavelengths = spec_utils.get_wavelengths()
-
         torch.manual_seed(0)
         df = pd.read_csv(constants.DATASET)
         if X_columns is None or len(X_columns) == 0:
-            all_columns = list(df.columns)
-            for c in cols_to_remove:
-                all_columns.remove(c)
-            X_columns = all_columns
-            X_columns.remove(y_column)
+            X_columns = spec_utils.get_wavelengths()
 
         self.X_columns = X_columns
         self.y_column = y_column
         self.folds = folds
-
-        base_columns = []
-        derived_columns = []
-
-        for c in self.X_columns:
-            if c in df.columns:
-                base_columns.append(c)
-            else:
-                derived_columns.append(c)
-
-        df2 = df[base_columns]
-        df2 = df2.sample(frac=1)
-
-        for dc in derived_columns:
-            df2[dc] = self.derive(df, dc)
-
-        df2[self.y_column] = df[self.y_column]
-        self.full_data = df2.to_numpy()
+        df = df[X_columns+[y_column]]
+        df = df.sample(frac=1)
+        self.full_data = df.to_numpy()
         self.full_data = DSManager._normalize(self.full_data)
 
     @staticmethod
@@ -54,19 +30,6 @@ class DSManager:
             x_scaled = scaler.fit_transform(data[:, i].reshape(-1, 1))
             data[:, i] = np.squeeze(x_scaled)
         return data
-
-    def derive(self, df, si):
-        if si == "savi":
-            L = 0.5
-            nir = df["vnir4"]
-            red = df["red"]
-            return (nir - red) / (nir + red + L) * (1 + L)
-        elif si == "savi2":
-            L = 35
-            nir = df["vnir4"]
-            red = df["red"]
-            return (nir - red) / (nir + red + L) * (1 + L)
-        return None
 
     def get_k_folds(self):
         kf = KFold(n_splits=self.folds)
