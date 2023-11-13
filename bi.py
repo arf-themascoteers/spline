@@ -7,3 +7,6 @@ class BI(SIModule):
 
     def _forward(self, outs):
         return outs[0]
+
+    def _names(self):
+        return "band"

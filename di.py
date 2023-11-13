@@ -7,3 +7,6 @@ class DI(SIModule):
 
     def _forward(self, outs):
         return outs[0] - outs[1]
+
+    def _names(self):
+        return "band"

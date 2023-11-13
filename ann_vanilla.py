@@ -43,12 +43,7 @@ class ANNVanilla:
             r2, rmse = self.validate()
             r2 = round(r2,5)
             rmse = round(rmse,5)
-            if self.model.count_ris > 0:
-                i = round(F.sigmoid(self.model.ris[0].params[0]).item() * 4200)
-                j = round(F.sigmoid(self.model.ris[0].params[1]).item() * 4200)
-                print(f"{epoch+1}:",r2,rmse,i,j)
-            else:
-                print(f"{epoch+1}:",r2,rmse)
+            print(f"{epoch+1}:",r2,rmse)
         #torch.save(self.model, "ann.pt")]
 
     def test(self):

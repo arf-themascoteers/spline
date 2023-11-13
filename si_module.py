@@ -16,3 +16,8 @@ class SIModule(nn.Module):
     def _forward(self, spline):
         pass
 
+    def _names(self):
+        pass
+
+    def param_values(self):
+        return [{"name":self._names()[i],"value":self.params[i]} for i in range(self.params.shape[0])]
