@@ -60,7 +60,7 @@ class ANNVanilla:
         for (x, y) in dataloader:
             x = x.to(self.device)
             y = y.to(self.device)
-            y_hat = self.model(x, y)
+            y_hat = self.model(x)
             y_hat = y_hat.reshape(-1)
             y_hat = y_hat.detach().cpu().numpy()
             return y_hat
@@ -73,7 +73,7 @@ class ANNVanilla:
         for (x, y) in dataloader:
             x = x.to(self.device)
             y = y.to(self.device)
-            y_hat = self.model(x, y)
+            y_hat = self.model(x)
             y_hat = y_hat.reshape(-1)
             y_hat = y_hat.detach().cpu().numpy()
             y = y.detach().cpu().numpy()
