@@ -9,4 +9,4 @@ class DI(SIModule):
         return outs[0] - outs[1]
 
     def _names(self):
-        return "band"
+        return ["i","j"]

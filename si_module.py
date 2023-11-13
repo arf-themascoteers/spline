@@ -20,4 +20,4 @@ class SIModule(nn.Module):
         pass
 
     def param_values(self):
-        return [{"name":self._names()[i],"value":self.params[i]} for i in range(self.params.shape[0])]
+        return [{"name":self._names()[i],"value":self.params[i].item()} for i in range(self.params.shape[0])]

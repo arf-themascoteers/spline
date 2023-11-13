@@ -11,3 +11,10 @@ class SNDI(SIModule):
     def _forward(self, outs):
         scaled_j = self.alpha*outs[1]
         return (outs[0] - scaled_j)/(outs[0] + scaled_j)
+
+    def _names(self):
+        return ["i","j","alpha"]
+
+    def param_values(self):
+        param_values = super().param_values()
+        param_values.append({"name":"alpha","value":self.alpha.item()})

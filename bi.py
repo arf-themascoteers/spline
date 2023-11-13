@@ -9,4 +9,4 @@ class BI(SIModule):
         return outs[0]
 
     def _names(self):
-        return "band"
+        return ["band"]

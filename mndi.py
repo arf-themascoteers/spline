@@ -17,3 +17,10 @@ class MNDI(SIModule):
         down = r_is + diff
         mndis = up/down
         return mndis
+
+    def _names(self):
+        return ["i","j"]
+
+    def param_values(self):
+        param_values = super().param_values()
+        param_values.append({"name":"alpha","value":self.alpha.item()})
