@@ -74,14 +74,4 @@ class ANN(nn.Module):
         soc_hat = self.linear1(outputs)
         soc_hat = soc_hat.reshape(-1)
         loss = self.criterion_soc(soc_hat, soc)
-        # for l in loss_bis:
-        #     loss = loss + self.alpha * l
-        # for l in loss_dis:
-        #     loss = loss + self.alpha * l
-        # for l in loss_ris:
-        #     loss = loss + self.alpha * l
-        # for l in loss_ndis:
-        #     loss = loss + self.alpha * l
-        # for l in loss_mndis:
-        #     loss = loss + self.alpha * l
         return soc_hat, outputs, loss
