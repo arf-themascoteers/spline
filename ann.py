@@ -18,8 +18,8 @@ class ANN(nn.Module):
             {"si":BI, "count":0},
             {"si":DI, "count":0},
             {"si":RI, "count":0},
-            {"si":NDI, "count":0},
-            {"si":SNDI, "count":0},
+            {"si":NDI, "count":5},
+            {"si":SNDI, "count":5},
             {"si":MNDI, "count":5}
         ]
 
