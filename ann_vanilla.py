@@ -44,6 +44,7 @@ class ANNVanilla:
             r2 = round(r2,5)
             rmse = round(rmse,5)
             print(f"{epoch+1}:",r2,rmse)
+            self.dump()
         #torch.save(self.model, "ann.pt")]
 
     def test(self):
@@ -75,3 +76,10 @@ class ANNVanilla:
             rmse = math.sqrt(mean_squared_error(y, y_hat, squared=False))
 
             return max(r2,0), rmse
+
+    def dump(self):
+        s = ""
+        for p in self.ann_model.get_params():
+            s = s+f"{p['si']:}"
+            for mp in p["params"]:
+                s = s+f"({mp['name']}:{mp['value']})"

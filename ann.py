@@ -15,7 +15,8 @@ class ANN(nn.Module):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         self.sis = [
-            {"si":MNDI, "count":10}
+            {"si":NDI, "count":2},
+            {"si":MNDI, "count":3}
         ]
 
         self.total = sum([si["count"] for si in self.sis])
@@ -44,3 +45,16 @@ class ANN(nn.Module):
         soc_hat = self.linear1(outputs)
         soc_hat = soc_hat.reshape(-1)
         return soc_hat
+
+    def get_params(self):
+        params = []
+        index = 0
+        for type_count, si in enumerate(self.sis):
+            for i in range(si["count"]):
+                machine = self.machines[index]
+                p = {}
+                p["si"] = si["si"]
+                p["params"] = machine.param_values()
+                params.append(p)
+                index = index+1
+        return params

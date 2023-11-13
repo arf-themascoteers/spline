@@ -16,5 +16,5 @@ class SNDI(SIModule):
         return ["i","j","alpha"]
 
     def param_values(self):
-        param_values = super().param_values()
-        param_values.append({"name":"alpha","value":self.alpha.item()})
+        param_value = super().param_values()
+        return param_value.append({"name":"alpha","value":self.alpha.item()})

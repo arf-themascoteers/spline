@@ -19,8 +19,8 @@ class MNDI(SIModule):
         return mndis
 
     def _names(self):
-        return ["i","j"]
+        return ["i","j","k","alpha"]
 
     def param_values(self):
-        param_values = super().param_values()
-        param_values.append({"name":"alpha","value":self.alpha.item()})
+        param_value = super().param_values()
+        return param_value.append({"name":"alpha","value":self.alpha.item()})
