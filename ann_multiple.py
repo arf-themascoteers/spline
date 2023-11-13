@@ -23,7 +23,7 @@ class ANNMultiple(nn.Module):
         self.count_ndis = 10
         self.count_mndis = 10
 
-        self.alpha = 0.1
+        self.alpha = 1
 
         self.total = self.count_bis + self.count_dis + self.count_ris + self.count_ndis + self.count_mndis
 
