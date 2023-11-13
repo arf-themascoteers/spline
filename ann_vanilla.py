@@ -80,6 +80,17 @@ class ANNVanilla:
     def dump(self):
         s = ""
         for p in self.ann_model.get_params():
-            s = s+f"{p['si']:}"
+            s = s+f"{p['si'].__name__:}"
             for mp in p["params"]:
                 s = s+f"({mp['name']}:{mp['value']})"
+        print(s)
+
+    def write_columns(self):
+        columns = ["epoch","batch","r2","loss"]
+        serial = 1
+        for p in self.ann_model.get_params():
+            columns = columns.append(f"SI#{serial}")
+            serial = serial+1
+            for mp in p["params"]:
+                columns.append(mp["name"])
+        self.reporter.write_columns(columns)
