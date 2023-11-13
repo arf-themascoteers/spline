@@ -104,6 +104,7 @@ class ANNVanilla:
         y_hat = y_hat.detach().cpu().numpy()
         y = y.detach().cpu().numpy()
         r2 = round(r2_score(y, y_hat),5)
+        r2 = max(0,r2)
         rmse = round(math.sqrt(loss.item()),5)
         row = [epoch, batch_number, r2, rmse]
         serial = 1
