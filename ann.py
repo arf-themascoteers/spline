@@ -41,8 +41,6 @@ class ANN(nn.Module):
         for i,machine in enumerate(self.machines):
             outputs[:,i] = machine(spline)
 
-        outputs = torch.cat(outputs, dim=1)
-
         soc_hat = self.linear1(outputs)
         soc_hat = soc_hat.reshape(-1)
         return soc_hat
