@@ -5,10 +5,10 @@ import torch.nn as nn
 
 class MNDI(SIModule):
     def __init__(self, device):
-        super().__init__(device, 2)
+        super().__init__(device, 3)
         self.alpha = nn.Parameter(torch.rand(1))
 
-    def forward(self, outs):
+    def _forward(self, outs):
         r_is = outs[0]
         r_js = outs[1]
         r_ks = outs[2]
