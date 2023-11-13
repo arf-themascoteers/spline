@@ -37,7 +37,7 @@ class ANN(nn.Module):
             modules = modules + [si["si"]() for i in range(si["count"])]
         self.machines = nn.ModuleList(modules)
 
-    def forward(self, x, soc):
+    def forward(self, x):
         outputs = torch.zeros(x.shape[0], self.total, dtype=torch.float32).to(self.device)
         x = x.permute(1,0)
         coeffs = natural_cubic_spline_coeffs(self.indices, x)

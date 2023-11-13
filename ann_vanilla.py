@@ -36,7 +36,7 @@ class ANNVanilla:
             for (x, y) in dataloader:
                 x = x.to(self.device)
                 y = y.to(self.device)
-                y_hat = self.model(x, y)
+                y_hat = self.model(x)
                 loss = self.criterion(y_hat, y)
                 loss.backward()
                 optimizer.step()
