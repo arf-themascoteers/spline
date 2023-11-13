@@ -20,4 +20,7 @@ class SIModule(nn.Module):
         pass
 
     def param_values(self):
-        return [{"name":self._names()[i],"value":self.params[i].item()} for i in range(self.params.shape[0])]
+        return [{"name":self._names()[i],"value":self.indexify(i)} for i in range(self.params.shape[0])]
+
+    def indexify(self, p):
+        return round((F.sigmoid(self.params[p])).item()*4200)
