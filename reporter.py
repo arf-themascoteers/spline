@@ -5,10 +5,8 @@ import spec_utils
 
 
 class Reporter:
-    def __init__(self, file_name, repeat, folds):
+    def __init__(self, file_name):
         self.file_name = file_name
-        self.repeat = repeat
-        self.folds = folds
         self.metrics = ["R2", "RMSE", "i", "j"]
         self.details_columns = self.get_details_columns()
         self.details_text_columns = ["repeat", "fold"]
