@@ -4,8 +4,8 @@ import torch
 
 
 class SNDI(SIModule):
-    def __init__(self, device):
-        super().__init__(device, 2)
+    def __init__(self):
+        super().__init__(2)
         self.alpha = nn.Parameter(torch.rand(1))
 
     def _forward(self, outs):

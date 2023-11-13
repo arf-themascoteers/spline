@@ -19,6 +19,7 @@ class ANNVanilla:
         self.validation_dataset = SpectralDataset(validation_x, validation_y)
         self.epochs = 400
         self.batch_size = 1000
+        self.criterion = torch.nn.MSELoss(reduction='mean')
 
     def train(self):
         self.model.train()
@@ -32,7 +33,8 @@ class ANNVanilla:
             for (x, y) in dataloader:
                 x = x.to(self.device)
                 y = y.to(self.device)
-                y_hat, additional, loss = self.model(x, y)
+                y_hat = self.model(x, y)
+                loss = self.criterion(y_hat, y)
                 loss.backward()
                 optimizer.step()
                 optimizer.zero_grad()
@@ -57,7 +59,7 @@ class ANNVanilla:
         for (x, y) in dataloader:
             x = x.to(self.device)
             y = y.to(self.device)
-            y_hat, additional, loss = self.model(x, y)
+            y_hat = self.model(x, y)
             y_hat = y_hat.reshape(-1)
             y_hat = y_hat.detach().cpu().numpy()
             return y_hat
@@ -70,7 +72,7 @@ class ANNVanilla:
         for (x, y) in dataloader:
             x = x.to(self.device)
             y = y.to(self.device)
-            y_hat, additional, loss = self.model(x, y)
+            y_hat = self.model(x, y)
             y_hat = y_hat.reshape(-1)
             y_hat = y_hat.detach().cpu().numpy()
             y = y.detach().cpu().numpy()
