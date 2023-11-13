@@ -49,7 +49,7 @@ class ANNVanilla:
             rmse = round(rmse,5)
             i = round(self.model.i.item() * 4200)
             j = round(self.model.j.item() * 4200)
-            print(r2,rmse,i,j)
+            print(f"{epoch+1}:",r2,rmse,i,j)
         #torch.save(self.model, "ann.pt")]
 
     def test(self):
