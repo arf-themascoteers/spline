@@ -48,8 +48,8 @@ class ANNVanilla:
             r2 = round(r2,5)
             rmse = round(rmse,5)
             if self.model.count_ndis > 0:
-                i = round(self.model.ndis[0].i.item() * 4200)
-                j = round(self.model.ndis[0].j.item() * 4200)
+                i = round(self.model.ndis[0].params[0].item() * 4200)
+                j = round(self.model.ndis[0].params[1].item() * 4200)
                 print(f"{epoch+1}:",r2,rmse,i,j)
             else:
                 print(f"{epoch+1}:",r2,rmse)
