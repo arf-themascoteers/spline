@@ -1,5 +1,4 @@
 import pandas as pd
-from sklearn.model_selection import KFold
 import torch
 from sklearn import model_selection
 import constants
@@ -9,16 +8,12 @@ import numpy as np
 
 
 class DSManager:
-    def __init__(self, folds=10, X_columns=None, y_column="oc"):
+    def __init__(self):
         torch.manual_seed(0)
         df = pd.read_csv(constants.DATASET)
-        if X_columns is None or len(X_columns) == 0:
-            X_columns = spec_utils.get_wavelengths()
-
-        self.X_columns = X_columns
-        self.y_column = y_column
-        self.folds = folds
-        df = df[X_columns+[y_column]]
+        self.X_columns = spec_utils.get_wavelengths()
+        self.y_column = "oc"
+        df = df[self.X_columns+[self.y_column]]
         df = df.sample(frac=1)
         self.full_data = df.to_numpy()
         self.full_data = DSManager._normalize(self.full_data)
@@ -31,23 +26,17 @@ class DSManager:
             data[:, i] = np.squeeze(x_scaled)
         return data
 
-    def get_k_folds(self):
-        kf = KFold(n_splits=self.folds)
-        for i, (train_index, test_index) in enumerate(kf.split(self.full_data)):
-            train_data = self.full_data[train_index]
-            train_data, validation_data = model_selection.train_test_split(train_data, test_size=0.1, random_state=2)
-            test_data = self.full_data[test_index]
-            train_x = train_data[:, :-1]
-            train_y = train_data[:, -1]
-            test_x = test_data[:, :-1]
-            test_y = test_data[:, -1]
-            validation_x = validation_data[:, :-1]
-            validation_y = validation_data[:, -1]
+    def get_datasets(self):
+        train_data, test_data = model_selection.train_test_split(self.full_data, test_size=0.1, random_state=2)
+        validation_data = model_selection.train_test_split(train_data, test_size=0.1, random_state=2)
+        train_x = train_data[:, :-1]
+        train_y = train_data[:, -1]
+        test_x = test_data[:, :-1]
+        test_y = test_data[:, -1]
+        validation_x = validation_data[:, :-1]
+        validation_y = validation_data[:, -1]
 
-            yield train_x, train_y, test_x, test_y, validation_x, validation_y
-
-    def get_folds(self):
-        return self.folds
+        yield train_x, train_y, test_x, test_y, validation_x, validation_y
 
     def split_X_y(self):
         return DSManager.split_X_y_array(self.full_data)

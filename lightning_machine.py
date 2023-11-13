@@ -1,12 +1,13 @@
 from lightning.pytorch import LightningModule
 import torch
 from torch import optim
+from ann import ANN
 
 
 class LightningMachine(LightningModule):
-    def __init__(self, model=None):
+    def __init__(self):
         super().__init__()
-        self.model = model
+        self.model = ANN()
         self.criterion = torch.nn.MSELoss(reduction='mean')
 
     def training_step(self, batch, batch_idx):

@@ -8,13 +8,10 @@ from mndi import MNDI
 from torchcubicspline import(natural_cubic_spline_coeffs, NaturalCubicSpline)
 
 
-class ANNMultiple(nn.Module):
-    def __init__(self, device, input_size, X_columns, y_column):
+class ANN(nn.Module):
+    def __init__(self):
         super().__init__()
-        self.device = device
-        self.input_size = input_size
-        self.X_columns = X_columns
-        self.y_column = y_column
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.criterion_soc = torch.nn.MSELoss(reduction='sum')
 
         self.count_bis = 10
@@ -32,7 +29,7 @@ class ANNMultiple(nn.Module):
             nn.LeakyReLU(),
             nn.Linear(20, 1)
         )
-        self.indices = torch.linspace(0, 1, 66).to(device)
+        self.indices = torch.linspace(0, 1, 66).to(self.device)
 
         self.bis = nn.ModuleList([BI(self.device) for i in range(self.count_bis)])
         self.dis = nn.ModuleList([DI(self.device) for i in range(self.count_dis)])
