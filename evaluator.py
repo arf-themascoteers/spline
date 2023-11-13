@@ -8,9 +8,9 @@ from ann_vanilla import ANNVanilla
 
 
 class Evaluator:
-    def __init__(self, prefix="", verbose=False):
+    def __init__(self, name="", verbose=False):
         self.verbose = verbose
-        self.reporter = Reporter(prefix)
+        self.reporter = Reporter(name)
 
     def process(self):
         ds = DSManager()

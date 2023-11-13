@@ -53,7 +53,7 @@ class ANN(nn.Module):
             for i in range(si["count"]):
                 machine = self.machines[index]
                 p = {}
-                p["si"] = si["si"]
+                p["si"] = si["si"].__name__
                 p["params"] = machine.param_values()
                 params.append(p)
                 index = index+1
