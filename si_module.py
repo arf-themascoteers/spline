@@ -12,7 +12,7 @@ class SIModule(nn.Module):
     def forward(self, spline):
         outs = [spline.evaluate(F.sigmoid(param)) for param in self.params]
         outs = self._forward(outs)
-        return outs, self.lower_bound_loss() + self.upper_bound_loss()
+        return outs
 
     def _forward(self, spline):
         pass
