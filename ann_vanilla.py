@@ -3,7 +3,6 @@ from sklearn.metrics import mean_squared_error, r2_score
 from spectral_dataset import SpectralDataset
 import torch
 from torch.utils.data import DataLoader
-import ann_utils
 from ann import ANN
 
 
