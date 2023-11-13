@@ -28,7 +28,7 @@ class DSManager:
 
     def get_datasets(self):
         train_data, test_data = model_selection.train_test_split(self.full_data, test_size=0.1, random_state=2)
-        validation_data = model_selection.train_test_split(train_data, test_size=0.1, random_state=2)
+        train_data, validation_data = model_selection.train_test_split(train_data, test_size=0.1, random_state=2)
         train_x = train_data[:, :-1]
         train_y = train_data[:, -1]
         test_x = test_data[:, :-1]
@@ -36,7 +36,7 @@ class DSManager:
         validation_x = validation_data[:, :-1]
         validation_y = validation_data[:, -1]
 
-        yield train_x, train_y, test_x, test_y, validation_x, validation_y
+        return train_x, train_y, test_x, test_y, validation_x, validation_y
 
     def split_X_y(self):
         return DSManager.split_X_y_array(self.full_data)
