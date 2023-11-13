@@ -23,4 +23,5 @@ class MNDI(SIModule):
 
     def param_values(self):
         param_value = super().param_values()
-        return param_value.append({"name":"alpha","value":self.alpha.item()})
+        param_value.append({"name":"alpha","value":self.alpha.item()})
+        return param_value
