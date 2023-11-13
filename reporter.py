@@ -7,12 +7,12 @@ import spec_utils
 class Reporter:
     def __init__(self, file_name):
         self.file_name = file_name
-        self.metrics = ["R2", "RMSE", "i", "j"]
-        self.details_columns = self.get_details_columns()
-        self.details_text_columns = ["repeat", "fold"]
-        self.details_file = f"results/{file_name}.csv"
-        self.details = np.zeros((self.get_count_iterations(), len(self.metrics)))
-        self.sync_details_file()
+        # self.metrics = ["R2", "RMSE", "i", "j"]
+        # self.details_columns = self.get_details_columns()
+        # self.details_text_columns = ["repeat", "fold"]
+        # self.details_file = f"results/{file_name}.csv"
+        # self.details = np.zeros((self.get_count_iterations(), len(self.metrics)))
+        # self.sync_details_file()
 
     def sync_details_file(self):
         if not os.path.exists(self.details_file):

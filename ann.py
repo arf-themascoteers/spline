@@ -15,10 +15,10 @@ class ANN(nn.Module):
         self.criterion_soc = torch.nn.MSELoss(reduction='sum')
 
         self.count_bis = 10
-        self.count_dis = 10
+        self.count_dis = 0
         self.count_ris = 0
-        self.count_ndis = 10
-        self.count_mndis = 10
+        self.count_ndis = 0
+        self.count_mndis = 0
 
         self.alpha = 1
 
@@ -74,17 +74,14 @@ class ANN(nn.Module):
         soc_hat = self.linear1(outputs)
         soc_hat = soc_hat.reshape(-1)
         loss = self.criterion_soc(soc_hat, soc)
-        for l in loss_bis:
-            loss = loss + self.alpha * l
-        for l in loss_dis:
-            loss = loss + self.alpha * l
-        for l in loss_ris:
-            loss = loss + self.alpha * l
-        for l in loss_ndis:
-            loss = loss + self.alpha * l
-        for l in loss_mndis:
-            loss = loss + self.alpha * l
+        # for l in loss_bis:
+        #     loss = loss + self.alpha * l
+        # for l in loss_dis:
+        #     loss = loss + self.alpha * l
+        # for l in loss_ris:
+        #     loss = loss + self.alpha * l
+        # for l in loss_ndis:
+        #     loss = loss + self.alpha * l
+        # for l in loss_mndis:
+        #     loss = loss + self.alpha * l
         return soc_hat, outputs, loss
-
-    def get_params(self):
-        return round(self.i.item()*4200), round(self.j.item()*4200)

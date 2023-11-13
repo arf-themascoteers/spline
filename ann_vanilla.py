@@ -4,6 +4,7 @@ from spectral_dataset import SpectralDataset
 import torch
 from torch.utils.data import DataLoader
 from ann import ANN
+import torch.nn.functional as F
 
 
 class ANNVanilla:
@@ -41,8 +42,8 @@ class ANNVanilla:
             r2 = round(r2,5)
             rmse = round(rmse,5)
             if self.model.count_ris > 0:
-                i = round(self.model.ris[0].params[0].item() * 4200)
-                j = round(self.model.ris[0].params[1].item() * 4200)
+                i = round(F.sigmoid(self.model.ris[0].params[0]).item() * 4200)
+                j = round(F.sigmoid(self.model.ris[0].params[1]).item() * 4200)
                 print(f"{epoch+1}:",r2,rmse,i,j)
             else:
                 print(f"{epoch+1}:",r2,rmse)

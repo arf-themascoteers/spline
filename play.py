@@ -1,4 +1,11 @@
-import pandas as pd
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import matplotlib.pyplot as plt
 
-df = pd.read_csv("data/dataset_s2.csv")
-print(df.columns)
+
+ar = torch.linspace(-1,1,100)
+print(F.sigmoid(ar))
+
+plt.plot(ar, F.sigmoid(ar))
+plt.show()

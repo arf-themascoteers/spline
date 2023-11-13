@@ -10,7 +10,7 @@ class SIModule(nn.Module):
         self.params = nn.Parameter(torch.rand(count_params))
 
     def forward(self, spline):
-        outs = [spline.evaluate(param) for param in self.params]
+        outs = [spline.evaluate(F.sigmoid(param)) for param in self.params]
         outs = self._forward(outs)
         return outs, self.lower_bound_loss() + self.upper_bound_loss()
 
