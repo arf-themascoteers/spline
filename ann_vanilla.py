@@ -30,7 +30,7 @@ class ANNVanilla:
         batch_number = 0
         loss = None
         dataloader = DataLoader(self.train_dataset, batch_size=self.batch_size)
-
+        row = None
         for epoch in range(self.epochs):
             batch_number = 0
             rows = []
@@ -43,14 +43,14 @@ class ANNVanilla:
                 optimizer.step()
                 optimizer.zero_grad()
                 batch_number += 1
-
-                rows.append(self.dump(y, y_hat, loss, epoch + 1, batch_number))
+                row = self.dump(y, y_hat, loss, epoch + 1, batch_number)
+                rows.append(row)
 
                 #print(f'Epoch:{epoch + 1} (of {self.epochs}), Batch: {batch_number} of {n_batches}, Loss:{loss.item():.6f}')
             r2, rmse = self.validate()
             r2 = round(r2,5)
             rmse = round(rmse,5)
-            print(f"{epoch+1}:",r2,rmse)
+            print("\t".join([str(i) for i in row]))
             Reporter.write_rows(rows)
 
         #torch.save(self.model, "ann.pt")]
@@ -93,6 +93,7 @@ class ANNVanilla:
             serial = serial+1
             for mp in p["params"]:
                 columns.append(mp["name"])
+        print("\t".join(columns))
         Reporter.write_columns(columns)
 
     def dump(self, y, y_hat, loss, epoch, batch_number):
@@ -111,5 +112,5 @@ class ANNVanilla:
             serial = serial+1
             for mp in p["params"]:
                 row.append(round(mp["value"],5))
-        self.plotter.plot(plot_items)
+        #self.plotter.plot(plot_items)
         return row
