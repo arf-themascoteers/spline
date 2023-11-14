@@ -5,7 +5,6 @@ import torch
 from torch.utils.data import DataLoader
 from ann import ANN
 from reporter import Reporter
-from plotter import Plotter
 
 
 class ANNVanilla:
@@ -20,7 +19,6 @@ class ANNVanilla:
         self.epochs = 400
         self.batch_size = 1000
         self.criterion = torch.nn.MSELoss(reduction='mean')
-        self.plotter = Plotter()
 
     def train(self):
         self.write_columns()
@@ -50,7 +48,7 @@ class ANNVanilla:
             r2, rmse = self.validate()
             r2 = round(r2,5)
             rmse = round(rmse,5)
-            print("\t".join([str(i) for i in row]))
+            print("".join([str(i).ljust(10) for i in row]))
             Reporter.write_rows(rows)
 
         #torch.save(self.model, "ann.pt")]
@@ -93,7 +91,7 @@ class ANNVanilla:
             serial = serial+1
             for mp in p["params"]:
                 columns.append(mp["name"])
-        print("\t".join(columns))
+        print("".join([c.ljust(10) for c in columns]))
         Reporter.write_columns(columns)
 
     def dump(self, y, y_hat, loss, epoch, batch_number):
@@ -112,5 +110,4 @@ class ANNVanilla:
             serial = serial+1
             for mp in p["params"]:
                 row.append(round(mp["value"],5))
-        #self.plotter.plot(plot_items)
         return row

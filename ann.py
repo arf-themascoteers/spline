@@ -15,7 +15,7 @@ class ANN(nn.Module):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         self.sis = [
-            {"si":BI, "count":1},
+            {"si":BI, "count":5},
             {"si":DI, "count":0},
             {"si":RI, "count":0},
             {"si":NDI, "count":0},
