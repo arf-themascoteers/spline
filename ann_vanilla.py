@@ -23,7 +23,16 @@ class ANNVanilla:
     def train(self):
         self.write_columns()
         self.model.train()
-        optimizer = torch.optim.Adam(self.model.parameters(), lr=0.01, weight_decay=0.001)
+        px = []
+        for params in self.ann_model.machines:
+            for p in params.parameters():
+                px.append(p)
+
+        param_group1 = {'params': px, 'lr': 0.01,}
+        param_group2 = {'params': self.ann_model.linear1.parameters(), 'lr': 0.001}
+        optimizer = torch.optim.Adam([param_group1,param_group2])
+
+        #optimizer = torch.optim.Adam(self.model.parameters(), lr=0.01, weight_decay=0.001)
         n_batches = int(self.train_dataset.size()/self.batch_size) + 1
         batch_number = 0
         loss = None
@@ -84,7 +93,7 @@ class ANNVanilla:
             return max(r2,0), rmse
 
     def write_columns(self):
-        columns = ["epoch","batch","r2","loss"]
+        columns = ["epoch","batch","r2","rmse"]
         serial = 1
         for p in self.ann_model.get_params():
             columns.append(f"SI#{serial}")
