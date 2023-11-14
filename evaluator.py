@@ -8,9 +8,8 @@ from ann_vanilla import ANNVanilla
 
 
 class Evaluator:
-    def __init__(self, name="", verbose=False):
-        self.verbose = verbose
-        self.reporter = Reporter(name)
+    def __init__(self):
+        pass
 
     def process(self):
         ds = DSManager()
@@ -18,9 +17,9 @@ class Evaluator:
         y_hats = None
         print(f"Train: {len(train_y)}, Test: {len(test_y)}, Validation: {len(validation_y)}")
         if constants.LIGHTNING:
-            ann = ANNLightning(train_x, train_y, test_x, test_y, validation_x, validation_y, self.reporter)
+            ann = ANNLightning(train_x, train_y, test_x, test_y, validation_x, validation_y)
         else:
-            ann = ANNVanilla(train_x, train_y, test_x, test_y, validation_x, validation_y, self.reporter)
+            ann = ANNVanilla(train_x, train_y, test_x, test_y, validation_x, validation_y)
         ann.train()
         y_hats = ann.test()
         r2 = r2_score(test_y, y_hats)

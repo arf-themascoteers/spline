@@ -1,7 +1,7 @@
 from evaluator import Evaluator
-from clear import clear_all
 
 if __name__ == "__main__":
-    clear_all()
-    c = Evaluator(name="test.csv")
-    c.process()
+    c = Evaluator()
+    r2, rmse = c.process()
+    print("r2",round(r2,5))
+    print("rmse",round(rmse,5))

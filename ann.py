@@ -15,12 +15,12 @@ class ANN(nn.Module):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         self.sis = [
-            {"si":BI, "count":0},
+            {"si":BI, "count":1},
             {"si":DI, "count":0},
             {"si":RI, "count":0},
-            {"si":NDI, "count":5},
-            {"si":SNDI, "count":5},
-            {"si":MNDI, "count":5}
+            {"si":NDI, "count":0},
+            {"si":SNDI, "count":0},
+            {"si":MNDI, "count":0}
         ]
 
         self.total = sum([si["count"] for si in self.sis])

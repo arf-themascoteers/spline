@@ -1,14 +1,17 @@
 class Reporter:
-    def __init__(self, file_name):
-        self.file_name = file_name
+    @staticmethod
+    def get_filename():
+        return "test.csv"
 
-    def write_columns(self, columns):
-        with open(self.file_name, 'w') as file:
+    @staticmethod
+    def write_columns(columns):
+        with open(Reporter.get_filename(), 'w') as file:
             file.write(",".join(columns))
             file.write("\n")
 
-    def write_rows(self, rows):
-        with open(self.file_name, 'a') as file:
+    @staticmethod
+    def write_rows(rows):
+        with open(Reporter.get_filename(), 'a') as file:
             for row in rows:
                 file.write(",".join([f"{x}" for x in row]))
                 file.write("\n")
