@@ -6,7 +6,8 @@ import torch.nn.functional as F
 class SIModule(nn.Module):
     def __init__(self, count_params):
         super().__init__()
-        self.params = nn.Parameter((torch.rand(count_params)*10)-5)
+        iv = (torch.rand(count_params)*10.0)-5.0
+        self.params = nn.Parameter(iv)
 
     def forward(self, spline):
         outs = [spline.evaluate(F.sigmoid(param)) for param in self.params]

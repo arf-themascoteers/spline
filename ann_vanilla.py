@@ -50,14 +50,12 @@ class ANNVanilla:
                 optimizer.step()
                 optimizer.zero_grad()
                 batch_number += 1
-                row = self.dump(y, y_hat, loss, epoch + 1, batch_number)
-                rows.append(row)
+
+
 
                 #print(f'Epoch:{epoch + 1} (of {self.epochs}), Batch: {batch_number} of {n_batches}, Loss:{loss.item():.6f}')
-            r2, rmse = self.validate()
-            r2 = round(r2,5)
-            rmse = round(rmse,5)
-            print("".join([str(i).ljust(10) for i in row]))
+            row = self.dump(y, y_hat, loss, epoch + 1, batch_number)
+            rows.append(row)
             Reporter.write_rows(rows)
 
         #torch.save(self.model, "ann.pt")]
@@ -93,7 +91,7 @@ class ANNVanilla:
             return max(r2,0), rmse
 
     def write_columns(self):
-        columns = ["epoch","batch","r2","rmse"]
+        columns = ["epoch","r2","rmse"]
         serial = 1
         for p in self.ann_model.get_params():
             columns.append(f"SI#{serial}")
@@ -112,7 +110,7 @@ class ANNVanilla:
         plot_items.append({"name":"r2","value":r2})
         rmse = round(math.sqrt(loss.item()),5)
         plot_items.append({"name":"rmse","value":rmse})
-        row = [epoch, batch_number, r2, rmse]
+        row = [epoch, r2, rmse]
         serial = 1
         for p in self.ann_model.get_params():
             row.append(p["si"])

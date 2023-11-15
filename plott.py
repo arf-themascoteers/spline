@@ -1,29 +1,12 @@
 import matplotlib
 matplotlib.use("TkAgg")
 import math
-import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
 import pandas as pd
 
 
-def init():
-    for ax in axes.flatten():
-        ax.plot(x, np.ma.array(x, mask=True))
-    return lines
-
-
-def animate(frame):
-    y_values = [np.sin(2 * np.pi * (x - 0.02 * frame + i)) for i in range(16)]
-
-    for i, line in enumerate(lines):
-        line.set_ydata(y_values[i])
-
-    return lines
-
-
 if __name__ == "__main__":
-    df = pd.read_csv("test2.csv")
+    df = pd.read_csv("test.csv")
     epoch_col = df.columns.get_loc("epoch")
     batch_col = df.columns.get_loc("batch")
     rw_col = df.columns.get_loc("r2")
@@ -47,29 +30,29 @@ if __name__ == "__main__":
     sis.append(si)
     print(sis)
     total_plots = len(sis)
-    rows = math.ceil(total_plots/2)
+    rows = math.ceil(total_plots/4)
 
-    fig, axes = plt.subplots(nrows=rows, ncols=2, figsize=(12, 8))
+    fig, axes = plt.subplots(nrows=rows, ncols=4)
 
     axes = axes.flatten()
 
     for i,p in enumerate(sis):
         name = p["name"]
         ax = axes[i]
-
+        title = False
         if name in ["r2", "rmse"]:
             data = df[name].tolist()
             ax.plot(data)
+            ax.set_title(name)
         else:
             for a_param in p["params"]:
-                data= df[name].tolist()
-                ax.plot(data)
+                data= df[a_param].tolist()
+                ax.plot(data, label=a_param.split(".")[0])
+                ax.set_ylim(1, 4300)
+                if not title:
+                    ax.set_title(df.loc[0,name])
+        ax.legend()
+
 
     plt.show()
-    # for ax in axes:
-    #     ax.legend()
-    #
-    # ani = FuncAnimation(fig, animate, frames=np.arange(1, 200), init_func=init, blit=True)
-    # plt.show()
-    # ani.save('animation.mp4', writer='ffmpeg', fps=30)
 

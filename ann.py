@@ -15,23 +15,25 @@ class ANN(nn.Module):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         self.sis = [
-            {"si":BI, "count":5},
+            {"si":BI, "count":0},
             {"si":DI, "count":0},
             {"si":RI, "count":0},
             {"si":NDI, "count":0},
-            {"si":SNDI, "count":0},
-            {"si":MNDI, "count":0}
+            {"si":SNDI, "count":5},
+            {"si":MNDI, "count":5}
         ]
 
         self.total = sum([si["count"] for si in self.sis])
 
         self.linear1 = nn.Sequential(
-            nn.Linear(self.total, 10),
+            nn.Linear(self.total, 50),
+            nn.LeakyReLU(),
+            nn.Linear(50, 10),
             nn.LeakyReLU(),
             nn.Linear(10, 1)
         )
 
-        self.indices = torch.linspace(0, 1, 66).to(self.device)
+        self.indices = torch.linspace(0, 1, 4200).to(self.device)
         modules = []
         for si in self.sis:
             modules = modules + [si["si"]() for i in range(si["count"])]
@@ -48,6 +50,7 @@ class ANN(nn.Module):
 
         soc_hat = self.linear1(outputs)
         soc_hat = soc_hat.reshape(-1)
+
         return soc_hat
 
     def get_params(self):
@@ -62,3 +65,5 @@ class ANN(nn.Module):
                 params.append(p)
                 index = index+1
         return params
+
+
