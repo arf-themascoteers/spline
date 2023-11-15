@@ -28,8 +28,9 @@ class ANNVanilla:
             for p in params.parameters():
                 px.append(p)
 
-        param_group1 = {'params': px, 'lr': 0.01,}
-        param_group2 = {'params': self.ann_model.linear1.parameters(), 'lr': 0.001}
+        param_group1 = {'params': px, 'lr': 0.01, "betas":(0.9, 0.999)}
+        #param_group1 = {'params': px, 'lr': 0.01}
+        param_group2 = {'params': self.model.linear1.parameters(), 'lr': 0.001}
         optimizer = torch.optim.Adam([param_group1,param_group2])
 
         #optimizer = torch.optim.Adam(self.model.parameters(), lr=0.01, weight_decay=0.001)
@@ -56,6 +57,7 @@ class ANNVanilla:
                 #print(f'Epoch:{epoch + 1} (of {self.epochs}), Batch: {batch_number} of {n_batches}, Loss:{loss.item():.6f}')
             row = self.dump(y, y_hat, loss, epoch + 1, batch_number)
             rows.append(row)
+            print("".join([str(i).ljust(10) for i in row]))
             Reporter.write_rows(rows)
 
         #torch.save(self.model, "ann.pt")]

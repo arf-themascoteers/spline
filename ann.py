@@ -19,8 +19,8 @@ class ANN(nn.Module):
             {"si":DI, "count":0},
             {"si":RI, "count":0},
             {"si":NDI, "count":0},
-            {"si":SNDI, "count":5},
-            {"si":MNDI, "count":5}
+            {"si":SNDI, "count":0},
+            {"si":MNDI, "count":2}
         ]
 
         self.total = sum([si["count"] for si in self.sis])
