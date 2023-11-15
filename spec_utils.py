@@ -21,3 +21,7 @@ def get_wavelengths_str():
 
 def get_rgb():
     return ["blue", "green", "red"]
+
+
+if __name__ == "__main__":
+    print(list(wavelengths_itr()))
