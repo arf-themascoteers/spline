@@ -5,13 +5,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
-if __name__ == "__main__":
+def plotit():
     df = pd.read_csv("test.csv")
-    epoch_col = df.columns.get_loc("epoch")
-    batch_col = df.columns.get_loc("batch")
-    rw_col = df.columns.get_loc("r2")
     rmse_col = df.columns.get_loc("rmse")
-    itrs = len(df)
     sis = [{"name":"r2"},{"name":"rmse"}]
     si = None
     for index in range(rmse_col+1,len(df.columns)):
@@ -56,3 +52,7 @@ if __name__ == "__main__":
 
     plt.show()
 
+
+
+if __name__ == "__main__":
+    plotit()
